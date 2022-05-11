@@ -239,7 +239,6 @@ countries = [
 ]
 
 country_codes = [item[0] for item in countries]
-country_codes = ['PT']
 
 continents = [
     ('Africa', 'Africa'),

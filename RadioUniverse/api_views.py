@@ -4,12 +4,15 @@ from django.http import HttpResponse, JsonResponse
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
 from .models import RadioStation
 from .utils import countries as all_countries, country_codes
 from .utils import continents as all_continents, radio_base_url
 from bs4 import BeautifulSoup
+from threading import Thread
+
+def calculate_pages(soup):
+    return 1 if len(soup.select('.pagination')) < 1 else int(soup.select('.pagination')[0].contents[-4].text)
 
 
 @api_view()
@@ -31,15 +34,17 @@ def get_stations(request, country_code):
     r = requests.get(url)
     soup = BeautifulSoup(r.text, 'html.parser')
     button_list = soup.select('.station_play')
-    number_of_pages = 1 if len(soup.select('pagination')) < 1 else int(soup.select('.pagination')[0].contents[-4].text)
+    number_of_pages = calculate_pages(soup)
     data = [
         {
             'station_name': button['radioname'], 'url': button['stream'], 'stream_type': button['streamtype'],
-            'radio_image': button['radioimg'], 'api_developer': 'Jack Tembo', 'api_developer_website': 'https://jacktembo.com',
+            'radio_image': button['radioimg'], 'api_developer': 'Jack Tembo',
+            'api_developer_website': 'https://jacktembo.com',
             'number_of_pages': number_of_pages
         } for button in button_list
     ]
     return Response(data)
+
 
 @api_view()
 def get_stations_by_page(request, country_code, page_number):
@@ -47,15 +52,17 @@ def get_stations_by_page(request, country_code, page_number):
     r = requests.get(url)
     soup = BeautifulSoup(r.text, 'html.parser')
     button_list = soup.select('.station_play')
-    number_of_pages = 1 if len(soup.select('pagination')) < 1 else int(soup.select('.pagination')[0].contents[-4].text)
+    number_of_pages = calculate_pages(soup)
     data = [
         {
             'station_name': button['radioname'], 'url': button['stream'], 'stream_type': button['streamtype'],
-            'radio_image': button['radioimg'], 'api_developer': 'Jack Tembo', 'api_developer_website': 'https://jacktembo.com',
+            'radio_image': button['radioimg'], 'api_developer': 'Jack Tembo',
+            'api_developer_website': 'https://jacktembo.com',
             'number_of_pages': number_of_pages
         } for button in button_list
     ]
     return Response(data)
+
 
 @api_view()
 def get_countries(request, continent):
@@ -66,27 +73,26 @@ def get_countries(request, continent):
     countries_list = [str(country) for country in countries]
     return Response(countries_list)
 
+
 @api_view()
 def save_to_db(request, country_code):
     url = radio_base_url + country_code
     r = requests.get(url)
     soup = BeautifulSoup(r.text, 'html.parser')
     button_list = soup.select('.station_play')
-    number_of_pages = 1 if len(soup.select('pagination')) < 1 else int(soup.select('.pagination')[0].contents[-4].text)
+    number_of_pages = calculate_pages(soup)
 
     for page_number in range(number_of_pages):
         url = radio_base_url + country_code + f'/?p={page_number}'
         r = requests.get(url)
         soup = BeautifulSoup(r.text, 'html.parser')
         button_list = soup.select('.station_play')
-        pagination = soup.select('.pagination')[0]
-        number_of_pages = int(pagination.contents[-4].text)
         data = [
             {
                 'station_name': button['radioname'], 'url': button['stream'], 'stream_type': button['streamtype'],
-                'radio_image': button['radioimg'], 'api_developer': 'Jack Tembo',
+                'radio_image_url': button['radioimg'], 'api_developer': 'Jack Tembo',
                 'api_developer_website': 'https://jacktembo.com',
-                'number_of_pages': number_of_pages
+
             } for button in button_list
         ]
         for station in data:
@@ -95,11 +101,12 @@ def save_to_db(request, country_code):
     return Response('Successfully Saved items.')
 
 
-# @api_view()
 def save_all_to_db(request):
     try:
         for country_code in country_codes:
-            save_to_db(request, country_code)
-    except:
-        print('Something went wrong, but data has been processed anyways.')
-    return HttpResponse('countries saved')
+            save_thread = Thread(target=save_to_db(request, country_code))
+            save_thread.start()
+        return HttpResponse('countries saved')
+
+    except Exception as e:
+        return HttpResponse(e)
