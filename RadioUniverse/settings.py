@@ -85,10 +85,10 @@ dev_db = {
 }
 prod_db = {
     'default': {
-        'NAME': 'allzedco_eventstickets',
+        'NAME': 'mbfzambia_radiouniverse',
         'ENGINE': 'mysql.connector.django',
-        'USER': 'allzedco_root',
-        'PASSWORD': 'Zambia2022!',
+        'USER': 'mbfzambia_root',
+        'PASSWORD': 'MagicBrains2022!',
         'OPTIONS': {
           'autocommit': True,
         },
