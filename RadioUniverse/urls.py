@@ -21,6 +21,7 @@ from . import views, api_views
 admin.AdminSite.site_title = 'Radio Universe'
 admin.AdminSite.site_header = 'Radio Universe Administration'
 urlpatterns = [
+    path('', api_views.index, name='index'),
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
     path('countries', api_views.countries, name='countries'),

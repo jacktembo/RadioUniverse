@@ -110,3 +110,7 @@ def save_all_to_db(request):
 
     except Exception as e:
         return HttpResponse(e)
+
+
+def index(request):
+    return HttpResponse('Welcome To Radio Universe.')
