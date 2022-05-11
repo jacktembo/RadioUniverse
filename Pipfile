@@ -12,6 +12,7 @@ django-filter = "*"
 markdown = "*"
 pillow = "*"
 mysql-connector-python = "*"
+whitenoise = "*"
 
 [dev-packages]
 

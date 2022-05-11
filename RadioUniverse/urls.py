@@ -13,6 +13,8 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 
@@ -31,4 +33,4 @@ urlpatterns = [
     path('<country_code>/<int:page_number>', api_views.get_stations_by_page),
     path('<country_code>/save', api_views.save_to_db),
     path('save-all', api_views.save_all_to_db),
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
