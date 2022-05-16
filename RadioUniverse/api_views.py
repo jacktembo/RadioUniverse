@@ -70,7 +70,8 @@ def get_countries(request, continent):
     r = requests.get(radio_base_url + continent + '/')
     soup = BeautifulSoup(r.text, 'html.parser')
     countries = soup.select('.countries__countries-list')[0].find_all('li')
-    countries_list = [str(country) for country in countries]
+
+    countries_list = {str(country.a['href'][1:-1].upper()): str(country.string) for country in countries}
     return Response(countries_list)
 
 
@@ -114,3 +115,13 @@ def save_all_to_db(request):
 
 def index(request):
     return HttpResponse('Welcome To Radio Universe.')
+
+
+@api_view()
+def developer(request):
+    api_developer = {
+        'first_name': 'Jack', 'last_name': 'Tembo', 'email': 'jack@jacktembo.com',
+        'website': 'https://www.jacktembo.com', 'nationality': 'Zambian', 'city': 'Lusaka',
+        'developer_experience': '10 Years'
+    }
+    return Response(api_developer)
