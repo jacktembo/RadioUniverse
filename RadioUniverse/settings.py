@@ -95,7 +95,7 @@ prod_db = {
         },
     }
 }
-DATABASES = dev_db
+DATABASES = prod_db
 
 
 # Password validation
