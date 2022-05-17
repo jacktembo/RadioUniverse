@@ -24,6 +24,7 @@ admin.AdminSite.site_title = 'Radio Universe'
 admin.AdminSite.site_header = 'Radio Universe Administration'
 urlpatterns = [
     path('', api_views.index, name='index'),
+    path('auth', include('djoser.urls')),
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
     path('world/countries', api_views.countries, name='countries'),

@@ -13,6 +13,7 @@ markdown = "*"
 pillow = "*"
 mysql-connector-python = "*"
 whitenoise = "*"
+djoser = "*"
 
 [dev-packages]
 
