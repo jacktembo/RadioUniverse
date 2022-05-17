@@ -34,4 +34,5 @@ urlpatterns = [
     path('<country_code>/dump', api_views.save_to_db),
     path('world/dump', api_views.save_all_to_db),
     path('developer', api_views.developer, name='developer'),
+    path(r'search', api_views.search, name='search'), # search whole world.
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

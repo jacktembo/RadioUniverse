@@ -9,3 +9,5 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 @api_view()
 def greet(request):
     return Response('Hello Jack')
+
+

@@ -125,3 +125,24 @@ def developer(request):
         'developer_experience': '10 Years'
     }
     return Response(api_developer)
+
+@api_view()
+def search(request):
+    query = request.GET.get('q', None)
+    country_code = request.GET.get('c', None)
+    style = request.GET.get('s', None)
+    url = f'https://onlineradiobox.com/search?q={query}&c={country_code}&s={style}'
+    r = requests.get(url)
+    soup = BeautifulSoup(r.text, 'html.parser')
+    button_list = soup.select('.station_play')
+    number_of_pages = calculate_pages(soup)
+    data = [
+        {
+            'station_name': button['radioname'], 'url': button['stream'], 'stream_type': button['streamtype'],
+            'radio_image': button['radioimg'], 'api_developer': 'Jack Tembo',
+            'api_developer_website': 'https://jacktembo.com',
+            'number_of_pages': number_of_pages
+        } for button in button_list
+    ]
+    return Response(data)
+
