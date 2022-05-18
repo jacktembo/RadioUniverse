@@ -236,7 +236,7 @@ countries = [
     ('YE', 'YEMEN'),
     ('ZM', 'ZAMBIA'),
     ('ZW', 'ZIMBABWE')
-]
+]  # All the countries on the platform.
 
 country_codes = [item[0] for item in countries]
 
@@ -246,7 +246,11 @@ continents = [
     ('Asia', 'Asia'),
     ('North-America', 'North America'),
     ('South-America', 'South America'),
-    ('Ocienia', 'Ocienia'),
-]
+    ('Oceania', 'Oceania'),
+]  # All the continents on the platform.
 
-radio_base_url = 'https://onlineradiobox.com/'
+radio_base_url = 'https://onlineradiobox.com/'  # the base URL endpoint to scrap the data.
+
+music_styles = [
+    'Pop', 'hip hop', 'jazz', 'rock'
+]  # Music genres available on the platform.

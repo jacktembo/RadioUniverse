@@ -13,6 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from datetime import date, datetime, timedelta, time
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
@@ -20,8 +21,23 @@ from django.urls import path, include
 
 from . import views, api_views
 
+right_now = datetime.now()
+hour = right_now.hour
+
+
+def message():
+    """
+    Greeting message to be shown on the Admin Panel.
+    :return:
+    """
+    return 'Good Morning' if 0 <= hour <= 11 else 'Good Day' if hour == 12 or hour == 13 else 'Good afternoon' if 13 <= hour <= 17 else 'Good Evening'
+
+
 admin.AdminSite.site_title = 'Radio Universe'
 admin.AdminSite.site_header = 'Radio Universe Administration'
+admin.AdminSite.index_title = f'{message()} From Jack Tembo! How Are You Today? Welcome To The World\'s Largest ' \
+                              f'Online Radio API. '
+
 urlpatterns = [
     path('', api_views.index, name='index'),
     path('auth', include('djoser.urls')),
