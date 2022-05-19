@@ -91,6 +91,7 @@ prod_db = {
         'PASSWORD': 'MagicBrains2022!',
         'OPTIONS': {
             'autocommit': True,
+            'charset': 'utf8mb4',
         },
     }
 }
