@@ -28,7 +28,7 @@ class RadioStation(models.Model):
     country = models.CharField(max_length=100, choices=countries, blank=True, null=True)
     town = models.CharField(max_length=100, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
-    url = models.URLField()
+    url = models.URLField(max_length=1000)
     banner_image_url = models.URLField(blank=True, null=True)
     language = models.CharField(max_length=100, default='English')
 
