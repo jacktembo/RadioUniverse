@@ -12,7 +12,7 @@ countries = [
     ('AM', 'ARMENIA'),
     ('AW', 'ARUBA'),
     ('AU', 'AUSTRALIA'),
-    ('AT', 'AUSTRIA'),
+    ('AT', 'AUSTRIA'), #
     ('AZ', 'AZERBAIJAN'),
     ('BS', 'BAHAMAS'),
     ('BH', 'BAHRAIN'),
@@ -220,7 +220,7 @@ countries = [
     ('TC', 'TURKS AND CAICOS ISLANDS'),
     ('TV', 'TUVALU'),
     ('UG', 'UGANDA'),
-    ('UA', 'UKRAINE'),
+    ('UA', 'UKRAINE'), #
     ('AE', 'UNITED ARAB EMIRATES'),
     ('GB', 'UNITED KINGDOM'),
     ('US', 'UNITED STATES'),

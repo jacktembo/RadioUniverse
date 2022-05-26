@@ -19,10 +19,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-xjyruddo7w7(5xd*kti=lvksn^f4!$y^pp2dc^!ucn)6izdwqn'
+SECRET_KEY = os.environ['secret_key']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -85,10 +85,10 @@ dev_db = {
 }
 prod_db = {
     'default': {
-        'NAME': 'mbfzambia_radiouniverse',
-        'ENGINE': 'mysql.connector.django',
-        'USER': 'mbfzambia_root',
-        'PASSWORD': 'MagicBrains2022!',
+        'NAME': os.environ['deb_name'],
+        'ENGINE': os.environ['db_engine'],
+        'USER': os.environ['db_user'],
+        'PASSWORD': os.environ['db_password'],
         'OPTIONS': {
             'autocommit': True,
 
