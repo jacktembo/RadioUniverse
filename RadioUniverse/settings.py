@@ -85,7 +85,7 @@ dev_db = {
 }
 prod_db = {
     'default': {
-        'NAME': os.environ['deb_name'],
+        'NAME': os.environ['db_name'],
         'ENGINE': os.environ['db_engine'],
         'USER': os.environ['db_user'],
         'PASSWORD': os.environ['db_password'],
