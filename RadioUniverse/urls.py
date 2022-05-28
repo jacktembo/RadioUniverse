@@ -40,7 +40,8 @@ admin.AdminSite.index_title = f'{message()} From Jack Tembo! How Are You Today? 
 
 urlpatterns = [
     path('', api_views.index, name='index'),
-    path('auth', include('djoser.urls')),
+    path('auth/', include('djoser.urls')),
+    path('auth/', include('djoser.urls.authtoken')),
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
     path('world/countries', api_views.countries, name='countries'),

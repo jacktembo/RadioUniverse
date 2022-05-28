@@ -63,10 +63,9 @@ def get_stations(request, country_code):
     number_of_pages = calculate_pages(soup)
     data = [
         {
-            'station_name': button['radioname'], 'url': button['stream'], 'stream_type': button['streamtype'],
-            'radio_image': button['radioimg'], 'api_developer': 'Jack Tembo',
-            'api_developer_website': 'https://jacktembo.com',
-            'number_of_pages': number_of_pages, 'country': country_code
+            'radio_name': button['radioname'], 'live_stream_url': button['stream'], 'stream_type': button['streamtype'],
+            'radio_image': 'https:' + button['radioimg'], 'radio_id': button['radioid'].replace('.', '/'),
+            'number_of_pages': number_of_pages, 'country': country_code, 'current_listeners': button.get('listeners', 'N/A'),
         } for button in button_list
     ]
     return Response(data)
@@ -88,9 +87,9 @@ def get_stations_by_page(request, country_code, page_number):
     number_of_pages = calculate_pages(soup)
     data = [
         {
-            'station_name': button['radioname'], 'url': button['stream'], 'stream_type': button['streamtype'],
-            'radio_image': button['radioimg'], 'api_developer': 'Jack Tembo',
-            'api_developer_website': 'https://jacktembo.com',
+            'radio_name': button['radioname'], 'live_stream_url': button['stream'], 'stream_type': button['streamtype'],
+            'radio_image': button['radioimg'], 'current_listeners': button.get('listeners', 'N/A'),
+            'radio_id': button['radioid'].replace('.', '/'),
             'number_of_pages': number_of_pages, 'country': country_code.upper()
         } for button in button_list
     ]
@@ -116,7 +115,8 @@ def get_countries(request, continent):
 @api_view()
 def save_to_db(request, country_code):
     """
-    Save specified country's radio stations to the database.
+    Save specified country's radio stations to the database. This is for internal
+    use only.
     :param request:
     :param country_code:
     :return:
@@ -134,15 +134,16 @@ def save_to_db(request, country_code):
         button_list = soup.select('.station_play')
         data = [
             {
-                'station_name': button['radioname'], 'url': button['stream'], 'stream_type': button['streamtype'],
-                'radio_image_url': button['radioimg'], 'api_developer': 'Jack Tembo',
+                'radio_name': button['radioname'], 'live_stream_url': button['stream'], 'stream_type': button['streamtype'],
+                'radio_image_url': 'https:' + button['radioimg'], 'api_developer': 'Jack Tembo',
                 'api_developer_website': 'https://jacktembo.com', 'country': country_code.upper()
 
             } for button in button_list
         ]
         for station in data:
-            RadioStation.objects.create(name=station['station_name'],
-                                        url=station['url'], country=country_code.upper(), banner_image_url=station['radio_image_url'])
+            RadioStation.objects.create(name=station['radio_name'],
+                                        url=station['live_stream_url'], country=country_code.upper(),
+                                        banner_image_url=station['radio_image_url'])
 
     return Response('Successfully Saved items.')
 
@@ -150,7 +151,7 @@ def save_to_db(request, country_code):
 def save_all_to_db(request):
     """
     Save all radio stations across the world to the database. This will save
-    sations by country in the alphabetical order.
+    sations by country in the alphabetical order. This is for internal use only.
     :param request:
     :return:
     """
@@ -174,7 +175,7 @@ def developer(request):
     api_developer = {
         'first_name': 'Jack', 'last_name': 'Tembo', 'email': 'jack@jacktembo.com',
         'website': 'https://www.jacktembo.com', 'nationality': 'Zambian', 'city': 'Lusaka',
-        'developer_experience': '10 Years'
+        'developer_experience': '10+ Years'
     }
     return Response(api_developer)
 
@@ -189,17 +190,19 @@ def search(request):
     query = request.GET.get('q', None)
     country_code = request.GET.get('c', None)
     style = request.GET.get('s', None)
-    url = f'https://onlineradiobox.com/search?q={query}&c={country_code}&s={style}'
+    url = f'https://onlineradiobox.com/search?q={query}&c={country_code}&s={style}'\
+        if country_code is not None and style is not None\
+        else f'https://onlineradiobox.com/search?q={query}'
     r = requests.get(url)
     soup = BeautifulSoup(r.text, 'html.parser')
     button_list = soup.select('.station_play')
     number_of_pages = calculate_pages(soup)
     data = [
         {
-            'station_name': button['radioname'], 'url': button['stream'], 'stream_type': button['streamtype'],
-            'radio_image': button['radioimg'], 'api_developer': 'Jack Tembo',
-            'api_developer_website': 'https://jacktembo.com',
-            'number_of_pages': number_of_pages, 'country': country_code.upper()
+            'radio_name': button['radioname'], 'live_stream_url': button['stream'], 'stream_type': button['streamtype'],
+            'radio_id': button['radioid'].replace('.', '/'),
+            'radio_image': 'https:' + button['radioimg'], 'current_listeners': button.get('listeners', 'N/A'),
         } for button in button_list
     ]
     return Response(data)
+
